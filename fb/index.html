@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Facebook Login JavaScript Example</title>
+<meta charset="UTF-8">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<style type="text/css">
+  body {
+    background-image: url("1.jpg");
+    background-repeat: repeat;
+}
+DIV.ctn {
+    min-height: 150px;
+    min-width: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+
+    
+    }
+
+</style>
+</head>
+<body>
+<script>
+  var age;
+  var name;
+  var marrageFinalDate;
+  // This is called with the results from from FB.getLoginStatus().
+  function statusChangeCallback(response) {
+    //console.log('statusChangeCallback');
+    //console.log(response);
+    // The response object is returned with a status field that lets the
+    // app know the current login status of the person.
+    // Full docs on the response object can be found in the documentation
+    // for FB.getLoginStatus().
+    if (response.status === 'connected') {
+      // Logged into your app and Facebook.
+      testAPI();
+    } else {
+      // The person is not logged into your app or we are unable to tell.
+      document.getElementById('status').innerHTML = 'Please log ' +
+        'into this app.';
+    }
+  }
+
+  // This function is called when someone finishes with the Login
+  // Button.  See the onlogin handler attached to it in the sample
+  // code below.
+  function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+      var queryString = "?name=" + name + "&age=" + age + "&mDate=" + marrageFinalDate;
+      window.location.href = "second.html" + queryString;
+    });
+  }
+
+  window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '301639560282183',
+    cookie     : true,  // enable cookies to allow the server to access 
+                        // the session
+    xfbml      : true,  // parse social plugins on this page
+    version    : 'v2.8' // use graph api version 2.8
+  });
+
+  // Now that we've initialized the JavaScript SDK, we call 
+  // FB.getLoginStatus().  This function gets the state of the
+  // person visiting this page and can return one of three states to
+  // the callback you provide.  They can be:
+  //
+  // 1. Logged into your app ('connected')
+  // 2. Logged into Facebook, but not your app ('not_authorized')
+  // 3. Not logged into Facebook and can't tell if they are logged into
+  //    your app or not.
+  //
+  // These three cases are handled in the callback function.
+
+  FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+    
+  });
+
+  };
+
+  // Load the SDK asynchronously
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/all.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+
+
+  //get Random date
+  function getRandomInt (min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+   var MarrageDate;
+  function getRandom(date1, date2) {
+          var minD = Date.parse(date1);
+          var maxD = Date.parse(date2);
+          var random = getRandomInt(parseInt(minD), parseInt(maxD));
+          var randomDate = new Date();
+          
+          randomDate.setTime(random);
+          MarrageDate=randomDate;
+          //console.log(randomDate);
+        }
+
+  // Here we run a very simple test of the Graph API after login is
+  // successful.  See statusChangeCallback() for when this call is made.
+  function testAPI() {
+    console.log('Welcome!  Fetching your information.... ');
+    FB.api('/me','GET',{"fields":"id,name,birthday"}, function(response) {
+      //console.log(response.birthday);
+
+      var birthDate = new Date(response.birthday);
+
+
+      
+      var today = new Date();
+
+      name=response.name;
+      age = today.getFullYear() - birthDate.getFullYear();
+      var m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+      }
+      //console.log(age);
+
+      var year = today.getFullYear();
+      var month = today.getMonth();
+      var day = today.getDate();
+
+
+      if(age<22)
+      {
+        var marrageFirstDate = new Date(year + 10, month, day);
+        var marrageSecondDate = new Date(year + 12, month, day);
+      }
+      else if(age<28)
+      {
+        var marrageFirstDate = new Date(year + 5, month, day);
+        var marrageSecondDate = new Date(year + 7, month, day);
+      }
+      else if(age<35)
+      {
+        var marrageFirstDate = new Date(year + 3, month, day);
+        var marrageSecondDate = new Date(year + 5, month, day);
+      }
+      else
+      {
+        var marrageFirstDate = new Date(year + 2, month, day);
+        var marrageSecondDate = new Date(year + 5, month, day);
+      }
+
+      getRandom(marrageFirstDate, marrageSecondDate);
+      finalMarrageDate=MarrageDate;
+      marrageFinalDate=MarrageDate;
+      //send next page
+      // var queryString = "?name=" + response.name + "&age=" + age + "&mDate=" + marrageFinalDate;
+      // window.location.href = "second.html" + queryString;
+      
+    });
+  }
+</script>
+
+
+<!--
+  Below we include the Login Button social plugin. This button uses
+  the JavaScript SDK to present a graphical Login button that triggers
+  the FB.login() function when clicked.
+-->
+
+<div class="row" style="padding-bottom:100px">
+  <div class="col-md-2" style="padding:0;margin:0">
+    &nbsp;
+  </div>
+  <div class="col-md-8 ctn" style="padding:0;margin:0;">
+
+      <img src="http://wallsdesk.com/wp-content/uploads/2016/02/wonderful-wedding-wallpaper.jpg"height="90%" width="90%"/>
+      <br><br><br>
+
+  
+    
+    <div class="col-md-4">
+      &nbsp;
+    </div>
+    <div class="col-md-4">
+      <img src="http://wp-time.com/wp-content/uploads/2016/03/facebook.png" height="100px" width="100px">
+      <br>
+      <img src="https://image.flaticon.com/icons/png/512/60/60995.png" height="100px" width="100px">
+      <br>
+      <button>
+          <fb:login-button scope="public_profile,email,user_birthday" onlogin="checkLoginState();">
+          </fb:login-button>
+      </button>
+    <div id="status">
+    </div>
+    </div>
+    <div class="col-md-4">
+      &nbsp;
+    </div>
+  </div>
+
+  <div class="col-md-2" style="padding:0;margin:0">
+    &nbsp;
+  </div>
+</div>
+
+
+
+</body>
+</html>
